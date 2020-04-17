@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>HTML CANVAS</title>
+	<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+	<canvas id="draw"></canvas>
+
+	<script>
+		const canvas = document.querySelector("#draw");
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		const ctx = canvas.getContext("2d");
+		ctx.strokeStyle = '#000000';
+
+
+		// // draw rect
+		// ctx.fillStyle = "rgba(255,0,0,0.1)"
+		// ctx.fillRect(100,100,100,100);
+		// // draw rect
+
+		// //draw line
+		// ctx.beginPath();
+		// ctx.moveTo(50,300);
+		// ctx.lineTo(100,100);
+		// ctx.lineTo(200,200);
+		// ctx.strokeStyle ="blue";
+		// ctx.stroke();
+		// //draw line
+
+		// //draw circle
+		// ctx.beginPath();
+		// ctx.arc(300,300,50,0,Math.PI*2,true);
+		// ctx.strokeStyle ="red";
+		// ctx.stroke();
+		// //draw circle
+
+		// //draw lots of circle
+		// for(let i = 0; i<1000 ; i++){
+		// 	let x = Math.random()*1680;
+		// 	let y = Math.random()*916;
+		// 	let r = Math.random()*50;
+			
+
+		// 	ctx.beginPath();
+		// 	ctx.arc(x,y,r,0,Math.PI*2,true);
+		// 	ctx.strokeStyle ="red";
+		// 	ctx.stroke();
+		// }
+		// //draw lots of circle
+
+
+		// //make animation
+		// let x = Math.random()*innerWidth;
+		// let y = Math.random()*innerHeight;
+		// let r = 50;
+		// let dx = (Math.random() - 0.5)*20;
+		// let dy = (Math.random() - 0.5)*20;
+		// function animate(){
+		
+		// 	requestAnimationFrame(animate);
+		// 	ctx.clearRect(0,0,innerWidth,innerHeight);
+		// 	ctx.beginPath();
+		// 	ctx.arc(x,y,r,0,Math.PI*2,true);
+		// 	ctx.strokeStyle ="red";
+		// 	ctx.stroke();
+		// 	x+=dx;
+		// 	y+=dy;
+
+		// 	if(x+r>innerWidth||x-r<0){
+		// 		dx=-dx;
+		// 	}
+		// 	if(y+r>innerHeight||y-r<0){
+		// 		dy=-dy;
+		// 	}
+			
+
+		// }
+		// animate();
+		// //make animation
+
+		//creating JS object
+		let colorArray = [
+			'#040FD9',
+			'#040DBF',
+			'#020873',
+			'#010440',
+			'#F2E74B'
+
+		];
+		let mouseX;
+		let mouseY;
+		window.addEventListener("mousemove",mousedata);
+		function mousedata(e){
+			mouseX=e.offsetX;
+			mouseY=e.offsetY;
+		}
+		
+		function Circle(x,y,r,dx,dy){
+			this.x = x;
+			this.y = y;
+			this.r = r;
+			this.mr = r;
+			this.dx = dx;
+			this.dy = dy;
+			this.color = colorArray[Math.floor(Math.random()*colorArray.length)];
+			this.draw = function(){
+				ctx.beginPath();
+				ctx.arc(this.x,this.y,this.r,0,Math.PI*2,true);
+				ctx.fillStyle = this.color;
+				ctx.fill();
+				
+			}
+			this.update = function(){
+				// x -> 1
+				// mouseX -> 5
+				if((Math.abs(this.x - mouseX) < 50) && (Math.abs(this.y - mouseY) < 50)){
+					this.r++;
+					if(this.r>80){
+						this.r=80;
+					}
+					
+					console.log(this.x,mouseX,this.y,mouseY)
+				}else if(this.r>this.mr){
+					this.r--;
+				}
+
+
+				this.x+=this.dx;
+				this.y+=this.dy;
+
+				if(this.x+this.r>innerWidth||this.x-this.r<0){
+					this.dx=-this.dx;
+				}
+				if(this.y+this.r>innerHeight||this.y-this.r<0){
+					this.dy=-this.dy;
+				}
+			// 	
+				this.draw();
+			}
+		}
+
+		let circles=[];
+
+		for(let i = 0; i<1000; i++){
+			let r = Math.random()*20;
+			let x = Math.random()*(innerWidth-2*r)+r;
+			let y = Math.random()*(innerHeight-2*r)+r;
+			
+			let dx = (Math.random() - 0.5);
+			let dy = (Math.random() - 0.5);
+			
+			circles.push(new Circle(x,y,r,dx,dy));
+		}
+		
+		circles.forEach(circle=>{
+			circle.draw();	
+		})
+
+		
+		function animate(){
+			ctx.clearRect(0,0,innerWidth,innerHeight);
+			//note:不能只update第一個circle要每個都基於改變後的參數update
+			circles.forEach(circle=>{
+				circle.update();
+			})
+
+			//
+			ctx.beginPath();
+			ctx.arc(mouseX, mouseY, 20, 0,Math.PI*2,true);
+			ctx.strokeStyle ="#0f0";
+			ctx.stroke();
+
+			requestAnimationFrame(animate);
+		}
+		animate();
+		//creating JS object
+		
+
+	</script>
+
+</body>
+
+</html>
