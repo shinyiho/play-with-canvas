@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>HTML CANVAS</title>
+	<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+	<canvas id="draw"></canvas>
+
+	<script>
+		const canvas = document.querySelector("#draw");
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		const ctx = canvas.getContext("2d");
+
+		let colorArray = [
+			'#A60A33',
+			'#F22E8A',
+			'#F23DB3',
+			'#F877BC',
+			'#A22B4F'
+
+		];
+
+		function Arc(x, r, color, dy) {
+			let y = -100;
+			 
+			this.draw = function () {
+				ctx.fillStyle = color;
+				
+				ctx.beginPath();
+				ctx.arc(x, y-1, r, Math.PI, Math.PI * 2, true);
+				ctx.fill();
+				
+				ctx.fillRect(x-r,0,2*r,y);
+				
+				
+				
+			
+				
+				
+			}
+			this.update = function () {
+					y=y+dy;
+				 	this.draw();
+			}
+
+		}
+
+		let arcs = []
+		
+		// setInterval(flow,3000);
+		function flow(n = 10) {
+			for (let i = 0; i < n; i++) {
+				let x = Math.random() * innerWidth;
+				let r = Math.random() * 30;
+				let dy = Math.random() * 2+3;
+				let color = colorArray[Math.floor(Math.random() * colorArray.length)];
+				arcs.push(new Arc(x, r, color, dy));
+			}
+		}
+		
+		// arcs.forEach(arc => arc.draw())
+	
+
+
+		let frameCount = 0
+		flow(100)
+		function animate(){
+			ctx.clearRect(0,0,innerWidth,innerHeight);
+			//note:不能只update第一個circle要每個都基於改變後的參數update
+			arcs.forEach(arc=>{
+				arc.update();
+			})
+			if (frameCount % 200 === 0) {
+				flow()
+			}
+			if (arcs.length >1000){
+				arcs = arcs.slice(10);
+			}
+
+			frameCount++
+
+			requestAnimationFrame(animate);
+		}
+		animate();
+
+
+
+
+
+	</script>
+
+</body>
+
+</html>
