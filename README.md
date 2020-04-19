@@ -1,8 +1,7 @@
 # play-with-canvas
 
-
-
-dot 
+## [dot](./dots)
 ![Alt text](./dots/f1565769024251.png)
-line 
+
+## [line](./lines)
 ![Alt text](./lines/line.png)
